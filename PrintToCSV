@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 23 15:06:09 2022
+
+this Program aids in drawing graphs for neural network architecture
+"""
+
+MaxGen = 76
+Count = 0
+
+Source = "C:/Users/user/AppData/Roaming/Godot/app_userdata/Neural/gen1/"
+
+SavePath = "C:/Users/user/AppData/Roaming/Godot/app_userdata/Neural/Graphs/RawData.csv"
+
+GenStart = "generation%s.save" 
+
+import json
+import csv
+
+def get_notation(content):
+    notation = ["Gen"]
+    
+    for each in range(content[1]["hidden_nodes"]):
+        string = "Nodeb1-%s" % each
+        notation.append(string)
+    
+    for each in range(content[1]["output_nodes"]):
+        string = "Nodeb2-%s" % each
+        notation.append(string)
+        
+    for each in range(len(content[1]["weights_ih"])):
+        string = "Nodeb_IH-%s" % each
+        notation.append(string)
+        
+    for each in range(len(content[1]["weights_ho"])):
+        string = "Nodeb_HO-%s" % each
+        notation.append(string)
+        
+    return notation
+
+with open(SavePath, mode='w') as file:
+    writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    while Count <= MaxGen:
+        GenStart = "generation%s.save" % (Count)
+        complete_path = Source + GenStart
+     #   with open(complete_path, 'r') as fcc_file:
+        content = [json.loads(line) for line in open(complete_path,'r')]
+        if Count == 0:
+                text = get_notation(content)             
+                writer.writerow(text)
+        for each in range(content[0]):
+            row = []
+            row.append(Count)
+            
+            for every in range(len(content[each+1]["bias_h"])):
+                value = content[each+1]["bias_h"][every]
+                row.append(value)
+                
+            for every in range(len(content[each+1]["bias_o"])):
+                value = content[each+1]["bias_o"][every]
+                row.append(value)
+                
+            for every in range(len(content[each+1]["weights_ih"])):
+                value = content[each+1]["weights_ih"][every]
+                row.append(value)
+                
+            for every in range(len(content[each+1]["weights_ho"])):
+                value = content[each+1]["weights_ho"][every]
+                row.append(value)
+            
+            writer.writerow(row) 
+        Count += 1
+file.close()
+
