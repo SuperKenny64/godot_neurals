@@ -2,7 +2,7 @@
 """
 Created on Mon May 23 15:06:09 2022
 
-this Program aids in drawing graphs for neural network architecture
+this python script aids in drawing graphs for neural network architecture
 """
 
 MaxGen = 76
